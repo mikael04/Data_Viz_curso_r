@@ -1,0 +1,71 @@
+---
+title: "Exercício 1 - RMarkdown"
+author: "Mikael Marin Coletto"
+date: "25/07/2021"
+output: html_document
+---
+
+## Carregar pacotes
+
+
+Se for necessário instalar o pacote dados, execute o código comentado abaixo!
+```{r, instalar_pacotes, include = T}
+# install.packages("remotes")
+# remotes::install_github("cienciadedatos/dados")
+```
+```{r, carregar_pacotes, include = T, warning = FALSE, message = F}
+library(tidyverse)
+library(dados)
+```
+
+```{r, manipular_dados, include = T, warning = FALSE, message = F}
+glimpse(clima)
+
+temperatura_por_mes <- clima %>% 
+  group_by(origem, mes = lubridate::floor_date(data_hora, "month")) %>% 
+  summarise(
+    temperatura_media = (mean(temperatura, na.rm = TRUE)-30)/2
+  ) %>% 
+  ungroup() 
+```
+
+## Filosofia
+
+Um gráfico estatístico é uma representação visual dos dados por meio de atributos estéticos (posição, cor, forma, 
+tamanho, ...) de formas geométricas (pontos, linhas, barras, ...). Leland Wilkinson, The Grammar of Graphics
+
+Layered grammar of graphics: cada elemento do gráfico pode ser representado por uma camada e um gráfico seria a sobreposição dessas camadas. Hadley Wickham, A layered grammar of graphics  
+
+## Gráfico de linhas
+
+```{r, grafico_linha, include = T, warning = FALSE, fig.align='center'}
+# Apenas o canvas
+temperatura_por_mes %>% 
+  ggplot()
+
+# Salvando em um objeto
+p <- temperatura_por_mes %>% 
+  ggplot()
+
+# Adicionando eixo X
+temperatura_por_mes %>% 
+  ggplot() +
+  aes(x = mes)
+
+# Adicionando eixo Y
+temperatura_por_mes %>% 
+  ggplot() +
+  aes(x = mes, y = temperatura_media)
+
+# Gráfico de dispersão da temperatura média do mês ao longo do tempo
+temperatura_por_mes %>% 
+  ggplot() +
+  aes(x = mes, y = temperatura_media, color = origem) +
+  geom_line()
+
+# Mesma informação, apenas trocando os mapeamentos estétiticos
+temperatura_por_mes %>% 
+  ggplot() +
+  geom_line(aes(x = mes, y = origem, color = temperatura_media), size = 10)
+
+```
