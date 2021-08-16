@@ -1,0 +1,22 @@
+---
+title: "Curso R - Trabalho Final"
+author: "Mikael"
+date: "8/8/2021"
+output:
+  html_document:
+    theme: flatly
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      warning = T,
+                      message = T)
+```
+
+## Analisando dados das olimpíadas 2020
+
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
